@@ -1,4 +1,5 @@
 import {ESPError, TimeoutError} from "./error.js";
+import pako from 'pako';
 
 const MAGIC_TO_CHIP = {
     [0x00f01d83]: () => import('./targets/esp32.js'),
@@ -728,12 +729,12 @@ class ESPLoader {
             let flash_modes =  {'qio':0, 'qout':1, 'dio':2, 'dout':3};
             a_flash_mode =  flash_modes[flash_mode];
         }
-        a_flash_freq = flash_size_freq & 0x0F;
+        let a_flash_freq = flash_size_freq & 0x0F;
         if (flash_freq !== 'keep') {
             let flash_freqs = {'40m': 0, '26m': 1, '20m': 2, '80m': 0xf};
             a_flash_freq = flash_freqs[flash_freq];
         }
-        a_flash_size = flash_size_freq & 0xF0;
+        let a_flash_size = flash_size_freq & 0xF0;
         if (flash_size !== 'keep') {
             a_flash_size = this.parse_flash_size_arg(flash_size);
         }
